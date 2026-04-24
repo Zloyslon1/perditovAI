@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Агенты — Материалы курса</title>
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --card: #1a1a2e;
+      --card-hover: #22223a;
+      --accent: #7c5cfc;
+      --accent2: #a78bfa;
+      --text: #e2e2e8;
+      --muted: #9999aa;
+      --border: #2a2a3e;
+      --green: #34d399;
+      --orange: #fb923c;
+      --red: #f87171;
+      --tag-bg: #2a2a4a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+    .week-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent2);
+      margin: 40px 0 16px;
+      padding-left: 4px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      transition: border-color 0.25s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .card-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--tag-bg);
+      border-radius: 12px;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: 2px 10px;
+      border-radius: 10px;
+      background: var(--tag-bg);
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag.lesson { background: #1e3a5f; color: #60a5fa; }
+    .tag.workbook { background: #1e3a2f; color: #34d399; }
+    .tag.guide { background: #3a2f1e; color: #fb923c; }
+    .tag.vip { background: #3a1e3a; color: #e879f9; }
+    .tag.live { background: #3a1e1e; color: #f87171; }
+    .card-body {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+    }
+    .card-body ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+    .card-body ul li {
+      padding: 3px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .card-body ul li::before {
+      content: '•';
+      position: absolute;
+      left: 4px;
+      color: var(--accent2);
+    }
+    .card-body p { margin-bottom: 8px; }
+    .card-body code {
+      background: #2a2a3e;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--green);
+    }
+    .card-body .cmd-block {
+      background: #111118;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+      color: var(--green);
+      margin: 10px 0;
+      overflow-x: auto;
+      word-break: break-all;
+    }
+    .card-body .note {
+      background: #1e293b;
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 10px 0;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #6a4ae0;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+    .btn-file {
+      background: #1e3a2f;
+      color: var(--green);
+    }
+    .btn-file:hover {
+      background: #254a3a;
+    }
+    .expand-toggle {
+      display: none;
+    }
+    .expandable {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .expand-toggle:checked + .card .expandable,
+    .expand-toggle:checked ~ .expandable {
+      max-height: 2000px;
+    }
+    .expand-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent2);
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 8px;
+      user-select: none;
+    }
+    .expand-btn::after {
+      content: '▼';
+      font-size: 0.6rem;
+      transition: transform 0.3s;
+    }
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 0 0;
+    }
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.5rem; }
+      .card { padding: 20px; }
+      .card-title { font-size: 1.1rem; }
+      .nav { gap: 5px; padding: 12px; }
+      .nav-btn { font-size: 0.75rem; padding: 5px 12px; }
+    }
+    details summary {
+      cursor: pointer;
+      color: var(--accent2);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    details[open] summary {
+      margin-bottom: 10px;
+    }
+    details > div {
+      padding-left: 4px;
+    }
+    .card-body ol {
+      padding-left: 24px;
+      margin-top: 10px;
+    }
+    .card-body ol li {
+      padding: 3px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI-Агенты</h1>
+  <p>Все уроки, воркбуки и материалы курса в одном месте</p>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="filterCards('all')">Все</button>
+  <button class="nav-btn" onclick="filterCards('lesson')">Уроки</button>
+  <button class="nav-btn" onclick="filterCards('workbook')">Воркбуки</button>
+  <button class="nav-btn" onclick="filterCards('guide')">Гайды</button>
+  <button class="nav-btn" onclick="filterCards('vip')">VIP</button>
+</nav>
+
+<div class="container">
+
+  <!-- ==================== НЕДЕЛЯ 1 ==================== -->
+  <div class="week-label">Неделя 1</div>
+
+  <!-- Урок 1.1 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 1.1 — Claude за 15 минут</div>
+        <div class="card-tags">
+          <span class="tag lesson">Урок</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Здесь ты соберёшь своего первого AI-помощника под твою нишу. Не абстрактного — реального, который уже сегодня закроет задачи из твоего списка.</p>
+      <div class="note">Внутри: объяснение логики, воркбук, коллекция агентов и первое задание.</div>
+      <details>
+        <summary>Материалы к уроку</summary>
+        <div>
+          <ul>
+            <li><strong>Основной инструмент:</strong> <a href="https://claude.ai" target="_blank" style="color:var(--accent2)">claude.ai</a> — бесплатный план работает отлично</li>
+            <li><strong>Коллекция агентов:</strong> <a href="https://curious-shock-9ff.notion.site/33cca3353d4780ac8279fa3d4f6b6324?source=copy_link" target="_blank" style="color:var(--accent2)">20+ готовых помощников</a></li>
+          </ul>
+          <p style="margin-top:10px"><strong>Задание:</strong> Собери помощника → сделай скрин результата → скинь в чат курса</p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/m9vtozzJqmQAhtTW8rFH5v/plTPsGrG" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- Воркбук 1.1 -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Воркбук урока 1.1</div>
+        <div class="card-tags">
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>За 30 минут собрать первого нормального помощника, который уже начнёт отвечать в твоей логике и в твоём тоне.</p>
+      <details>
+        <summary>Что делать</summary>
+        <div>
+          <ol>
+            <li>Отметь чеклист в начале</li>
+            <li>Скопируй шаблон <strong>Instructions</strong> и вставь его в Claude Project</li>
+            <li>Заполни <code>about-me.md</code> про себя, нишу, продукты и стиль общения</li>
+            <li>Заполни <code>faq.md</code> своими ответами на частые вопросы</li>
+            <li>Скачай оба файла и загрузи их в свой Project в Claude</li>
+            <li>Прогони <strong>10 тестовых вопросов</strong></li>
+            <li>Если ответы пока «не твои» — поправь Instructions, стиль и запрет-слова</li>
+          </ol>
+          <p style="margin-top:10px"><em>Воркбук сохраняет всё автоматически — можно заполнять поэтапно.</em></p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/workbook 1.1 .html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Claude из России -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">🤖</div>
+      <div>
+        <div class="card-title">Claude из России — полный гайд 2026</div>
+        <div class="card-tags">
+          <span class="tag guide">Гайд</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Подробная инструкция, как с нуля поднять у себя Claude — одну из трёх сильнейших нейросетей в мире.</p>
+      <details>
+        <summary>Что внутри</summary>
+        <div>
+          <ul>
+            <li>Регистрация на claude.ai с обходом блокировок (VPN, почта, виртуальный номер)</li>
+            <li>Установка десктопного приложения на Mac и Windows</li>
+            <li>Настройка Claude Code и Cowork</li>
+            <li>3 рабочих способа оплатить Pro/Max из России без иностранной карты</li>
+            <li>Гигиена аккаунта, чтобы не словить бан</li>
+            <li>Что делать, если аккаунт заблокировали</li>
+            <li>Альтернатива через российские агрегаторы</li>
+          </ul>
+          <p style="margin-top:10px"><em>Гайд актуален на апрель 2026, проверен после январских блокировок.</em></p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/claude-russia-guide-ai-team.html" target="_blank" class="btn btn-file">📄 Открыть гайд</a>
+    </div>
+  </div>
+
+  <!-- Claude Projects -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">📂</div>
+      <div>
+        <div class="card-title">Claude Projects — рабочий playbook</div>
+        <div class="card-tags">
+          <span class="tag guide">Гайд</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Не «обзор фичи», а нормальный рабочий playbook для тех, кто хочет использовать Claude как систему под конкретную задачу.</p>
+      <details>
+        <summary>Что внутри</summary>
+        <div>
+          <ul>
+            <li>Куда нажимать, чтобы создать проект</li>
+            <li>Как настроить Project knowledge</li>
+            <li>Где задавать project instructions</li>
+            <li>Как переносить чаты в проект</li>
+            <li>На каких мелочах люди ломают результат</li>
+          </ul>
+          <p style="margin-top:10px"><em>Всё оформлено на скриншотах со стрелками и пояснениями.</em></p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/claude-projects-serdito-playbook.html" target="_blank" class="btn btn-file">📄 Открыть playbook</a>
+    </div>
+  </div>
+
+  <!-- Урок 1.2 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 1.2 — Первый AI-ассистент в Telegram</div>
+        <div class="card-tags">
+          <span class="tag lesson">Урок</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Ты соберёшь своего первого AI-ассистента в Telegram через Factory Installer. Запустишь установщик одной командой и получишь живого бота.</p>
+      <details>
+        <summary>Подготовка и детали</summary>
+        <div>
+          <p><strong>Перед стартом подготовь 4 вещи:</strong></p>
+          <ol>
+            <li><strong>Терминал</strong> — на Mac: <a href="https://iterm2.com/downloads.html" target="_blank" style="color:var(--accent2)">iTerm2</a></li>
+            <li><strong>Telegram-бот</strong> — через <a href="https://t.me/BotFather" target="_blank" style="color:var(--accent2)">@BotFather</a></li>
+            <li><strong>Telegram User ID</strong> — через <a href="https://t.me/userinfobot" target="_blank" style="color:var(--accent2)">@userinfobot</a></li>
+            <li><strong>API key</strong> — <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent2)">OpenRouter</a> или <a href="https://opencode.ai/auth" target="_blank" style="color:var(--accent2)">OpenCode / Zen</a></li>
+          </ol>
+          <p style="margin-top:10px"><strong>Команда установки:</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-factory/main/scripts/demo-install.sh)</div>
+          <div class="note">⚠️ bot token и API key никому не отправляй. Username бота и token — это не одно и то же.</div>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/5RFtLExc6XSSzVsVPsjLrz/plZLpZhb" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- Воркбук OpenClaw -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Воркбук по OpenClaw</div>
+        <div class="card-tags">
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Нормальная пошаговая опора, чтобы не потеряться во время установки. Весь путь от первого запуска терминала до Telegram-бота.</p>
+      <ul>
+        <li>Простое объяснение, что такое OpenClaw</li>
+        <li>Что подготовить заранее</li>
+        <li>Разбор частых ошибок</li>
+        <li>Шпаргалка с командами</li>
+      </ul>
+    </div>
+    <div class="card-actions">
+      <a href="files/openclaw-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Запись эфира -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🔴</div>
+      <div>
+        <div class="card-title">Запись эфира по первому блоку</div>
+        <div class="card-tags">
+          <span class="tag live">Эфир</span>
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Помогает дожать до результата, если ты где-то встрял по дороге.</p>
+      <details>
+        <summary>Что внутри воркбука</summary>
+        <div>
+          <ul>
+            <li>12 самых частых затыков по первым двум урокам</li>
+            <li>Готовые ответы простым языком</li>
+            <li>Карта: где именно проблема — установка, Telegram, gateway или модель</li>
+            <li>Чеклист для прохода по шагам</li>
+            <li>Нужные команды</li>
+          </ul>
+          <p style="margin-top:10px"><strong>Кому особенно нужен:</strong> если бот молчит, если <code>/status</code> работает, а сообщения нет, если вылез <code>access not configured</code>.</p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/dANfEDL995RBnMzcdcPX98/plD96g2q" target="_blank" class="btn btn-primary">▶ Смотреть запись</a>
+      <a href="files/efir-2026-04-16-workbook.html" target="_blank" class="btn btn-file">📄 Воркбук эфира</a>
+    </div>
+  </div>
+
+  <!-- Claude Design -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">🎨</div>
+      <div>
+        <div class="card-title">Claude Design — Воркбук</div>
+        <div class="card-tags">
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Полноценный workbook по новому инструменту Claude Design от Anthropic.</p>
+      <ul>
+        <li>Что это за инструмент и как работает</li>
+        <li>С чего начать первый проект</li>
+        <li>Как писать промпты под нормальный результат</li>
+        <li>Как вносить правки и экспортировать</li>
+      </ul>
+    </div>
+    <div class="card-actions">
+      <a href="files/claude-design-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Экстренный урок -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">⚡</div>
+      <div>
+        <div class="card-title">Экстренный урок — как задавать вопросы</div>
+        <div class="card-tags">
+          <span class="tag lesson">Урок</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Урок по логике, взаимоуважению и навыку задавать нормальные вопросы. Обязателен к просмотру перед продолжением курса.</p>
+      <details>
+        <summary>Подробнее</summary>
+        <div>
+          <ul>
+            <li>Перечень вопросов, которые решаются за 30 секунд в Google</li>
+            <li>Как задавать вопросы бот-куратору с контекстом</li>
+            <li>Почему нельзя тегать поддержку без скриншота</li>
+            <li>Почему сначала нужно попытаться разобраться самому</li>
+          </ul>
+          <p style="margin-top:10px"><em>Посмотрел урок — напиши в чат, что принимаешь условия и готов продолжать.</em></p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/nwuMYivFfvW6AhuBAVNU6k/plCdjzYh" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- ==================== НЕДЕЛЯ 2 ==================== -->
+  <div class="week-label">Неделя 2</div>
+
+  <!-- Урок 2.1 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 2.1 — Первая AI-команда</div>
+        <div class="card-tags">
+          <span class="tag lesson">Урок</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>На первой неделе был один агент. Теперь собираем первую AI-команду.</p>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin:12px 0">
+        <div>
+          <strong>Standard:</strong><br>
+          🔧 Технарь<br>📈 Маркетолог<br>🎬 Продюсер
+        </div>
+        <div>
+          <strong>VIP:</strong><br>
+          🎨 Дизайнер<br>🧭 Координатор
+        </div>
+      </div>
+      <details>
+        <summary>Подготовка и команда установки</summary>
+        <div>
+          <p><strong>Что подготовить:</strong></p>
+          <ul>
+            <li>Установленный OpenClaw с первой недели</li>
+            <li>Bot token для каждого агента</li>
+            <li>Свой Telegram ID через @userinfobot</li>
+          </ul>
+          <p style="margin-top:10px"><strong>Команда старта:</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh)</div>
+          <p><strong>Результат:</strong> ты написал агентам в Telegram, и они ответили.</p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/fuGrAo9nSKfXTW2epGu9H9/plBAXv0r" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- Workbook 2.1 -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Workbook к уроку 2.1</div>
+        <div class="card-tags">
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Понятная опора, чтобы пройти путь от «у меня был один агент» до «у меня уже работает своя AI-команда».</p>
+      <ul>
+        <li>Суть урока и что меняется на второй неделе</li>
+        <li>Кто такие Технарь, Маркетолог и Продюсер</li>
+        <li>Как проходит установка по шагам</li>
+        <li>Частые затыки и как их решить</li>
+        <li>Домашка после урока</li>
+      </ul>
+    </div>
+    <div class="card-actions">
+      <a href="files/lesson-2-1-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- VIP -->
+  <div class="card" data-type="vip">
+    <div class="card-header">
+      <div class="card-icon">👑</div>
+      <div>
+        <div class="card-title">VIP — 5 AI-сотрудников в Telegram</div>
+        <div class="card-tags">
+          <span class="tag vip">VIP</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>VIP-тариф включает команду из 5 агентов, каждый в своём Telegram-боте:</p>
+      <ul>
+        <li>🔧 <strong>Технарь</strong> — ошибки, интеграции, настройки</li>
+        <li>📈 <strong>Маркетолог</strong> — смыслы, контент, воронки</li>
+        <li>🎬 <strong>Продюсер</strong> — продукт, сценарии, запуски</li>
+        <li>🎨 <strong>Дизайнер</strong> — визуалы, баннеры, креативы</li>
+        <li>🧭 <strong>Координатор</strong> — задачи и управление</li>
+      </ul>
+      <details>
+        <summary>Инструкция по установке</summary>
+        <div>
+          <p><strong>⚠️ Что нужно до старта:</strong></p>
+          <ol>
+            <li>Установленный OpenClaw из 1 недели</li>
+            <li>5 Telegram-ботов через @BotFather</li>
+            <li>Telegram ID через @userinfobot</li>
+          </ol>
+          <p style="margin-top:12px"><strong>Шаг 1. Получите VIP-токен</strong></p>
+          <ol>
+            <li>Откройте @AITeamVIPBot</li>
+            <li>Нажмите /start</li>
+            <li>Введите email или телефон от оплаты</li>
+            <li>Скопируйте VIP-токен</li>
+          </ol>
+          <p style="margin-top:12px"><strong>Шаг 2. Запустите установщик</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh)</div>
+          <p><strong>Шаг 3.</strong> Выберите <strong>2) VIP — 5 агентов</strong></p>
+          <p><strong>Шаг 4.</strong> Проверьте — напишите любому боту в Telegram.</p>
+
+          <p style="margin-top:12px"><strong>🆘 Если что-то не получилось:</strong></p>
+          <ul>
+            <li><strong>Токен не прошёл</strong> → скопируйте заново из @AITeamVIPBot</li>
+            <li><strong>Бот не нашёл вас</strong> → проверьте email/телефон, подождите 30 мин</li>
+            <li><strong>OpenClaw не найден</strong> → сначала установите из 1 недели</li>
+            <li><strong>Ничего не помогло</strong> → соберите debug-архив:</li>
+          </ul>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/.../install-agents.sh) --collect-debug</div>
+
+          <div class="note">Уже стоят 3 агента со Стандарта? Запусти установщик снова → выбери VIP → «Дополнить». Старые агенты останутся с памятью, добавятся Дизайнер и Координатор.</div>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+    </div>
+  </div>
+
+  <!-- Воркбук AI-команды -->
+  <div class="card" data-type="workbook vip">
+    <div class="card-header">
+      <div class="card-icon">📘</div>
+      <div>
+        <div class="card-title">Воркбук по установке AI-команды</div>
+        <div class="card-tags">
+          <span class="tag workbook">Воркбук</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Весь путь по шагам — без лишней теории, без технарской каши.</p>
+      <ul>
+        <li>Как поставить OpenClaw</li>
+        <li>Как подготовить Telegram-ботов</li>
+        <li>Как пройти установку команды</li>
+        <li>Как обновлять агентов дальше</li>
+        <li>Как проверить, что всё работает</li>
+      </ul>
+      <p style="margin-top:8px"><em>Плюс обновление трёх VIP-сотрудников — ставится поверх уже готовой команды.</em></p>
+    </div>
+    <div class="card-actions">
+      <a href="files/ai-team-install-refresh-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Урок 2.2 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 2.2 — Роли и первый рабочий цикл</div>
+        <div class="card-tags">
+          <span class="tag lesson">Урок</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Не просто смотрите на команду агентов, а начинаете через неё работать.</p>
+      <ul>
+        <li>Кто за что отвечает: технарь, маркетолог, продюсер</li>
+        <li>Как выбрать главного агента под задачу</li>
+        <li>Как передавать результат от роли к роли</li>
+        <li>Как проходить частые затыки</li>
+      </ul>
+      <p style="margin-top:8px"><strong>Результат:</strong> берёте реальную задачу, отдаёте нужному агенту, получаете результат.</p>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/nNqXmSAPpLUb1MGUtWzWmk/pl5qa1L8" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- Дополнительные материалы -->
+  <div class="week-label">Дополнительные материалы</div>
+
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">🔧</div>
+      <div>
+        <div class="card-title">Claude Cowork — Playbook</div>
+        <div class="card-tags">
+          <span class="tag guide">Гайд</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Рабочий playbook по Claude Cowork — для работы с кодом и автономных задач.</p>
+    </div>
+    <div class="card-actions">
+      <a href="files/claude-cowork-serdito-playbook.html" target="_blank" class="btn btn-file">📄 Открыть playbook</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  AI-Агенты — Материалы курса
+</div>
+
+<script>
+function filterCards(type) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    if (type === 'all') {
+      card.style.display = '';
+    } else {
+      card.style.display = card.dataset.type.includes(type) ? '' : 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

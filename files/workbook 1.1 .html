@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 1.1 — Твой первый помощник в Claude</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #111111;
+  --bg2: #1A1A1A;
+  --bg3: #222222;
+  --text: #FFFFFF;
+  --text2: #CCCCCC;
+  --text3: #888888;
+  --accent: #FF8562;
+  --accent2: #FFB70C;
+  --danger: #EB5339;
+  --success: #4CAF50;
+  --card-bg: #1E1E1E;
+  --border: #333333;
+  --font-display: 'Caveat', 'Impact', 'Arial Black', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════ PROGRESS BAR ═══════════════════════════════════════ */
+.progress-bar-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-bar-track {
+  flex: 1;
+  height: 14px;
+  background: var(--bg3);
+  border-radius: 7px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 5px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-label {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--accent2);
+  min-width: 60px;
+  text-align: right;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════ HERO ═══════════════════════════════════════ */
+.hero {
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, rgba(255,133,98,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hero h1 span { color: var(--accent); }
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 32px);
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+
+.hero-meta {
+  font-size: 15px;
+  color: var(--text3);
+  margin-top: 16px;
+}
+
+.hero-meta strong { color: var(--accent2); }
+
+/* ═══════════════════════════════════════ SECTIONS ═══════════════════════════════════════ */
+.section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.section-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.section-title span { color: var(--accent); }
+
+.section-desc {
+  color: var(--text2);
+  font-size: 16px;
+  margin-bottom: 32px;
+  max-width: 640px;
+}
+
+/* divider */
+.divider {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.divider-line {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  border: none;
+}
+
+/* ═══════════════════════════════════════ CARDS ═══════════════════════════════════════ */
+.card {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+
+.card:hover { border-color: var(--accent); }
+
+.card-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════ CHECKLIST ═══════════════════════════════════════ */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 24px;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.checklist-item:hover { border-color: var(--accent2); }
+.checklist-item.checked { border-color: var(--success); background: rgba(76, 175, 80, 0.08); }
+
+.check-box {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border: 3px solid var(--text3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s;
+  margin-top: 2px;
+}
+
+.checklist-item.checked .check-box {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.check-text {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.check-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent2);
+  margin-right: 4px;
+}
+
+/* ═══════════════════════════════════════ CODE BLOCK + COPY ═══════════════════════════════════════ */
+.code-block {
+  position: relative;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  overflow: auto;
+}
+
+.code-block pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn:hover { background: var(--accent); color: var(--bg); }
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-primary:hover { background: #ff6f47; }
+
+.btn-accent2 {
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+
+.btn-accent2:hover { background: var(--accent2); color: var(--bg); }
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.copy-feedback {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--success);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.copy-feedback.show { opacity: 1; }
+
+/* ═══════════════════════════════════════ FORMS ═══════════════════════════════════════ */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--accent2);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-hint {
+  display: block;
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: border-color 0.3s;
+  resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text3);
+  opacity: 0.6;
+}
+
+.form-textarea { min-height: 100px; }
+.form-textarea.tall { min-height: 160px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════ TEST QUESTIONS ═══════════════════════════════════════ */
+.test-block-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin: 40px 0 20px;
+  text-transform: uppercase;
+}
+
+.test-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+}
+
+.test-card.passed { border-color: var(--success); background: rgba(76, 175, 80, 0.06); }
+
+.test-question {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.test-check-what {
+  font-size: 14px;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.test-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.test-result .check-box {
+  width: 24px; height: 24px; min-width: 24px;
+  border-width: 2px;
+}
+
+.test-card.passed .test-result .check-box {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.test-notes {
+  width: 100%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  min-height: 60px;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+.test-notes:focus { outline: none; border-color: var(--accent); }
+
+/* ═══════════════════════════════════════ STOP WORDS ═══════════════════════════════════════ */
+.stop-category {
+  margin-bottom: 28px;
+}
+
+.stop-category-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--danger);
+  margin-bottom: 12px;
+}
+
+.stop-word {
+  display: inline-block;
+  background: rgba(235, 83, 57, 0.12);
+  border: 1px solid rgba(235, 83, 57, 0.3);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin: 4px;
+  font-size: 15px;
+  color: var(--danger);
+}
+
+.stop-replace {
+  color: var(--text3);
+  font-size: 13px;
+}
+
+/* ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ */
+.footer {
+  text-align: center;
+  padding: 60px 24px 80px;
+  color: var(--text3);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+/* ═══════════════════════════════════════ ARROW BETWEEN SECTIONS ═══════════════════════════════════════ */
+.arrow-down {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 32px;
+  color: var(--text3);
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════ RETRO SECTION ═══════════════════════════════════════ */
+.retro-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.retro-item .check-box {
+  width: 22px; height: 22px; min-width: 22px;
+  border-width: 2px;
+}
+
+.retro-item.checked .check-box {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+/* ═══════════════════════════════════════ PRINT ═══════════════════════════════════════ */
+@media print {
+  body { background: white; color: black; font-size: 12pt; }
+  .progress-bar-container { display: none; }
+  .btn, .btn-group { display: none; }
+  .hero { padding: 20px; }
+  .hero-badge { background: #333; color: white; }
+  .hero h1 { font-size: 28pt; color: black; }
+  .hero h1 span { color: #333; }
+  .section { padding: 20px 0; }
+  .section-title { font-size: 22pt; color: black; }
+  .section-title span { color: #333; }
+  .card, .checklist-item, .test-card, .code-block {
+    background: white; border-color: #ccc; color: black;
+    page-break-inside: avoid;
+  }
+  .form-input, .form-textarea, .test-notes {
+    background: white; border-color: #ccc; color: black;
+  }
+  .stop-word { background: #f0f0f0; border-color: #ccc; color: #333; }
+  .divider-line { background: #ccc; }
+  .arrow-down { display: none; }
+  .copy-feedback { display: none; }
+}
+
+/* ═══════════════════════════════════════ MOBILE ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  .hero { padding: 60px 16px 40px; }
+  .section { padding: 40px 16px; }
+  .card { padding: 20px; }
+  .checklist-item { padding: 14px 16px; }
+  .code-block { padding: 16px; }
+  .code-block pre { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ PROGRESS BAR ═══════════ -->
+<div class="progress-bar-container">
+  <span style="font-size:24px;">🗺️</span>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">0%</div>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-badge">КОМАНДА ИИ-АГЕНТОВ × СЕРДИТОВ</div>
+  <h1>УРОК 1.1<br><span>ТВОЙ ПЕРВЫЙ ПОМОЩНИК В CLAUDE</span></h1>
+  <div class="hero-sub">Workbook · заполни за 30 минут · работает офлайн</div>
+  <div class="hero-meta">Старт курса: <strong>10 апреля 2026</strong></div>
+</section>
+
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 1: CHECKLIST ═══════════ -->
+<section class="section" id="sec-checklist">
+  <div class="section-header">
+    <span class="section-icon">🎯</span>
+    <h2 class="section-title">ЧЕКЛИСТ <span>ДЕЙСТВИЙ</span></h2>
+  </div>
+  <p class="section-desc">Выполни все 6 пунктов по порядку. Отмечай выполненные — прогресс сохраняется автоматически.</p>
+
+  <div class="checklist-item" data-check="cl-1" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">1.</span> Открыл Claude, создал новый Project</div>
+  </div>
+  <div class="checklist-item" data-check="cl-2" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">2.</span> Заполнил шаблон Instructions (секция ниже)</div>
+  </div>
+  <div class="checklist-item" data-check="cl-3" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">3.</span> Заполнил about-me.md — профиль эксперта</div>
+  </div>
+  <div class="checklist-item" data-check="cl-4" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">4.</span> Заполнил faq.md — ответы на 10 вопросов</div>
+  </div>
+  <div class="checklist-item" data-check="cl-5" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">5.</span> Протестировал 10 вопросов ассистенту</div>
+  </div>
+  <div class="checklist-item" data-check="cl-6" onclick="toggleCheck(this)">
+    <div class="check-box"></div>
+    <div class="check-text"><span class="check-num">6.</span> Сдал ДЗ в чат курса</div>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 2: INSTRUCTIONS TEMPLATE ═══════════ -->
+<section class="section" id="sec-instructions">
+  <div class="section-header">
+    <span class="section-icon">📝</span>
+    <h2 class="section-title">ШАБЛОН <span>INSTRUCTIONS</span></h2>
+  </div>
+  <p class="section-desc">Скопируй этот текст и вставь в поле «Project Instructions» в Claude. Замени все <code>[...]</code> на свои данные.</p>
+
+  <div class="code-block" id="instructions-block">
+    <div class="copy-feedback" id="instructions-copy-fb">✓ Скопировано!</div>
+    <pre id="instructions-text">## КТО ТЫ
+
+Ты — ассистент [твоё имя или название бренда].
+
+Помогаешь [твоей ЦА — 1 фраза, например: предпринимателям разобраться с AI-инструментами / мамам в декрете выбрать курс английского / юристам систематизировать документы].
+
+## С КЕМ ТЫ ОБЩАЕШЬСЯ
+
+Типичный человек, который тебе пишет:
+- [Кто он: профессия / возраст / ситуация]
+- [Что у него болит: 1-2 главные боли]
+- [Чего он хочет от общения с тобой: быстро получить ответ / разобраться / записаться / узнать цену]
+
+## КАК ТЫ ОБЩАЕШЬСЯ (тон-оф-войс)
+
+1. Обращаешься на «[ты / вы]» — выбери одно, не путайся.
+2. Говоришь короткими предложениями. Без длинных абзацев.
+3. Без корпоративщины: нет слов «безусловно», «однако», «на сегодняшний день», «хотелось бы отметить», «в рамках», «осуществлять», «данный», «функционал».
+4. Если не знаешь ответ — говоришь «уточню у [имя владельца] и вернусь». Никогда не придумываешь.
+5. Не используешь эмодзи чаще одного на сообщение. Если совсем не нужно — ставишь ноль.
+6. Не начинаешь сообщения со слова «Конечно!» или «Прекрасный вопрос!».
+7. Когда объясняешь что-то сложное — даёшь аналогию из обычной жизни.
+8. В конце каждого ответа — конкретный следующий шаг для человека (если уместно).
+
+## ЧТО ТЫ ДЕЛАЕШЬ
+
+- Отвечаешь на вопросы о [услуге/продукте/теме]
+- Помогаешь выбрать подходящий вариант из [продуктовой линейки]
+- Даёшь базовую информацию: цены, формат, условия
+- Если человек готов купить / записаться — отправляешь его к [куда: в ЛС / на сайт / по ссылке]
+
+## ЧТО ТЫ НЕ ДЕЛАЕШЬ
+
+- Не принимаешь оплату, не выставляешь счета
+- Не обещаешь конкретные сроки/результаты, которых нет в faq.md
+- Не обсуждаешь конкурентов
+- Не даёшь советов вне своей темы
+- Не отвечаешь агрессивно, даже если человек хамит. Если хамит — вежливо завершаешь диалог фразой: «[твоя фраза для выхода]»
+
+## КОГДА В СОМНЕНИЯХ
+
+Смотри в файл about-me.md — там информация обо мне, моей нише, услугах.
+Смотри в файл faq.md — там готовые ответы на частые вопросы. Если вопрос совпадает с одним из FAQ — отвечай по готовому ответу, переформулируя своими словами в моём тоне.
+
+Если ответа нигде нет — честно пиши: «Хороший вопрос, у меня нет готового ответа. Передам [имя], он ответит лично в ближайшее время».
+
+## ПРИМЕР МОЕГО СТИЛЯ
+
+[Вставь сюда 3-4 своих реальных ответа из переписок. Это самое важное поле — по нему модель учится звучать как ты.]
+
+Пример:
+&gt; Вопрос: Сколько стоит?
+&gt; Мой ответ: Смотри, цена зависит от двух вещей — какой формат и как быстро надо. Давай я два варианта пришлю, ты выберешь. Окей?
+
+&gt; Вопрос: А гарантии есть?
+&gt; Мой ответ: Гарантия такая: 14 дней пробуешь, не зашло — возвращаю деньги без вопросов. Проверено.</pre>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="copyBlock('instructions-text', 'instructions-copy-fb')">📋 Скопировать Instructions</button>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 3: ABOUT-ME FORM ═══════════ -->
+<section class="section" id="sec-aboutme">
+  <div class="section-header">
+    <span class="section-icon">🧑‍💼</span>
+    <h2 class="section-title">ABOUT-ME<span>.MD</span></h2>
+  </div>
+  <p class="section-desc">Заполни один раз. Данные сохраняются автоматически — можно закрыть и продолжить позже. В конце скачай готовый файл.</p>
+
+  <div class="card">
+    <div class="card-label">Основное</div>
+
+    <div class="form-group">
+      <label class="form-label">Имя / название бренда</label>
+      <span class="form-hint">Например: Артём Сердитов / Студия ABC</span>
+      <input type="text" class="form-input" data-save="am-name" placeholder="Артём Сердитов">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Ниша</label>
+      <span class="form-hint">Например: запуск онлайн-курсов / психология отношений / видеопродакшн</span>
+      <input type="text" class="form-input" data-save="am-niche" placeholder="запуск онлайн-курсов">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Опыт в нише</label>
+        <input type="text" class="form-input" data-save="am-exp" placeholder="5 лет / с 2019 года">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telegram</label>
+        <input type="text" class="form-input" data-save="am-tg" placeholder="@username">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Главный результат, которым гордишься</label>
+      <span class="form-hint">1 конкретная цифра или кейс</span>
+      <textarea class="form-textarea" data-save="am-result" placeholder="Вывел клиента с 200К до 2М выручки за 4 месяца"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Целевая аудитория</div>
+
+    <div class="form-group">
+      <label class="form-label">Кто к тебе приходит</label>
+      <span class="form-hint">Опиши 1 типичного человека как живого</span>
+      <textarea class="form-textarea" data-save="am-persona" placeholder="Женщина 32-40, двое детей, в декрете 2 года, потеряла себя, хочет вернуться к работе"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">3 главные боли</label>
+      <textarea class="form-textarea" data-save="am-pains" placeholder="1. Не знает с чего начать&#10;2. Боится что не получится&#10;3. Нет системы и понимания куда двигаться"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Что они хотят от работы с тобой</label>
+      <input type="text" class="form-input" data-save="am-want" placeholder="Одной фразой: главный результат">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Продукты / услуги</div>
+
+    <div class="form-group">
+      <label class="form-label">Продукт 1</label>
+      <div class="form-row">
+        <input type="text" class="form-input" data-save="am-p1-name" placeholder="Название">
+        <input type="text" class="form-input" data-save="am-p1-price" placeholder="Цена: 9 990₽">
+      </div>
+      <textarea class="form-textarea" data-save="am-p1-desc" placeholder="Что это / для кого / формат / результат" style="margin-top:8px;"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Продукт 2</label>
+      <div class="form-row">
+        <input type="text" class="form-input" data-save="am-p2-name" placeholder="Название">
+        <input type="text" class="form-input" data-save="am-p2-price" placeholder="Цена">
+      </div>
+      <textarea class="form-textarea" data-save="am-p2-desc" placeholder="Что это / для кого / формат / результат" style="margin-top:8px;"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Продукт 3</label>
+      <div class="form-row">
+        <input type="text" class="form-input" data-save="am-p3-name" placeholder="Название">
+        <input type="text" class="form-input" data-save="am-p3-price" placeholder="Цена">
+      </div>
+      <textarea class="form-textarea" data-save="am-p3-desc" placeholder="Что это / для кого / формат / результат" style="margin-top:8px;"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Контакты и стиль</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Instagram</label>
+        <input type="text" class="form-input" data-save="am-ig" placeholder="@username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Сайт</label>
+        <input type="text" class="form-input" data-save="am-site" placeholder="https://...">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Уникальность — 3 отличия от конкурентов</label>
+      <textarea class="form-textarea" data-save="am-unique" placeholder="1. Сам прошёл через это — не теоретик&#10;2. Работаю с цифрами, а не энергиями&#10;3. Материалы остаются навсегда"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Примеры твоего стиля (минимум 3 реальных сообщения)</label>
+      <span class="form-hint">Скопируй из реальных переписок. Это самое важное — по ним Claude учится звучать как ты.</span>
+      <textarea class="form-textarea tall" data-save="am-style" placeholder="Сообщение 1:&#10;Смотри, цена зависит от двух вещей — формат и скорость. Давай два варианта пришлю, выберешь. Окей?&#10;&#10;Сообщение 2:&#10;...&#10;&#10;Сообщение 3:&#10;..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Стоп-темы (о чём ассистент НЕ отвечает)</label>
+      <textarea class="form-textarea" data-save="am-stop" placeholder="Личные отношения клиентов, юридические вопросы, рекомендации врачей"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Запрет-слова</label>
+      <textarea class="form-textarea" data-save="am-stopwords" placeholder="прекрасно, безусловно, осуществлять, функционал, касаемо, в рамках"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="downloadAboutMe()">⬇️ Скачать about-me.md</button>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 4: FAQ FORM ═══════════ -->
+<section class="section" id="sec-faq">
+  <div class="section-header">
+    <span class="section-icon">💬</span>
+    <h2 class="section-title">FAQ<span>.MD</span></h2>
+  </div>
+  <p class="section-desc">Напиши ответы СВОИМ голосом — как будто отвечаешь другу. Не формально. По этим ответам Claude будет учиться твоему тону.</p>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">1. Сколько стоит?</label>
+      <textarea class="form-textarea" data-save="faq-1" placeholder="Смотри, у меня три варианта — консультация 5К, курс 29К, индивидуальная работа от 90К. Зависит от того что тебе нужно. Расскажи что у тебя — я подскажу что брать."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">2. Как записаться / как начать работать?</label>
+      <textarea class="form-textarea" data-save="faq-2" placeholder="Пиши мне в ЛС @username одним сообщением: что у тебя болит и какой формат хочешь. Я отвечаю в течение дня, ставим созвон на 15 минут — разбираемся."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">3. Какие гарантии? Что если не подойдёт?</label>
+      <textarea class="form-textarea" data-save="faq-3" placeholder="Гарантия 14 дней. Если поймёшь что не твоё — возвращаю деньги без вопросов. Просто пишешь «хочу вернуть» — деньги у тебя в течение 3 дней."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">4. А чем ты отличаешься от других?</label>
+      <textarea class="form-textarea" data-save="faq-4" placeholder="Тремя вещами. Первая — я сам прошёл через то, про что говорю. Вторая — работаю с цифрами, а не энергиями. Третья — все материалы остаются навсегда."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">5. Сколько времени нужно?</label>
+      <textarea class="form-textarea" data-save="faq-5" placeholder="Минимум — 3 часа в неделю. Курс можно пройти за 3 недели или растянуть на 3 месяца. Доступ открыт 6 месяцев."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">6. Если я новичок / нет опыта?</label>
+      <textarea class="form-textarea" data-save="faq-6" placeholder="Это даже лучше. Новички быстрее учатся — нет старых привычек. Всё начинаем с нуля, предварительных знаний не нужно."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">7. Работаешь с регионами / не из Москвы?</label>
+      <textarea class="form-textarea" data-save="faq-7" placeholder="Работаю со всем миром — всё онлайн. Нужен только ноутбук и интернет. Часовой пояс не важен — материалы в записи + чат 24/7."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">8. Есть ли рассрочка?</label>
+      <textarea class="form-textarea" data-save="faq-8" placeholder="Да. Рассрочка 3-6 месяцев через банк. Переплат нет — проценты на мне, не на тебе. Оформляется за 5 минут."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">9. Когда ближайший старт?</label>
+      <textarea class="form-textarea" data-save="faq-9" placeholder="Ближайший старт — [дата]. Если горит и хочешь начать сразу — есть индивидуальный формат, зайти можно в любой момент."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">10. Можно сначала посмотреть что-то бесплатно?</label>
+      <textarea class="form-textarea" data-save="faq-10" placeholder="Да. У меня есть бесплатный гайд «[название]» — вот ссылка. Его хватит чтобы понять мой подход и решить зайдёт ли формат."></textarea>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="downloadFaq()">⬇️ Скачать faq.md</button>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 5: TEST QUESTIONS ═══════════ -->
+<section class="section" id="sec-tests">
+  <div class="section-header">
+    <span class="section-icon">⚡</span>
+    <h2 class="section-title">10 <span>ТЕСТОВЫХ ВОПРОСОВ</span></h2>
+  </div>
+  <p class="section-desc">Задай эти вопросы своему ассистенту. Критерий: ты узнаёшь в ответах СЕБЯ. Если «я бы так не сказал» — дорабатывай Instructions.</p>
+
+  <div class="test-block-title">Блок А — Классика директа</div>
+
+  <div class="test-card" data-test="t-1">
+    <div class="test-question">«Сколько стоит?»</div>
+    <div class="test-check-what">Проверяешь: называет ли цены из about-me. Задаёт ли встречный вопрос перед ценой.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-1" placeholder="Заметки: что не так / что доработать..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-2">
+    <div class="test-question">«Как записаться?»</div>
+    <div class="test-check-what">Проверяешь: даёт ли конкретный следующий шаг (ссылка, @username, форма).</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-2" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-3">
+    <div class="test-question">«Есть ли гарантии возврата?»</div>
+    <div class="test-check-what">Проверяешь: отвечает точно по faq.md, не фантазирует условия.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-3" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-block-title">Блок Б — Тест на тон</div>
+
+  <div class="test-card" data-test="t-4">
+    <div class="test-question">«Привет, расскажи про себя»</div>
+    <div class="test-check-what">Проверяешь: говорит как ты или как корпоративный бот? Короткий ответ или длинный абзац?</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-4" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-5">
+    <div class="test-question">«А ты хороший специалист?»</div>
+    <div class="test-check-what">Проверяешь: не хвалится бесконечно. Не говорит «я являюсь ведущим экспертом».</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-5" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-6">
+    <div class="test-question">«Можешь объяснить простыми словами как это работает?»</div>
+    <div class="test-check-what">Проверяешь: использует аналогии, не сыпет терминологией.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-6" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-block-title">Блок В — Пограничные случаи</div>
+
+  <div class="test-card" data-test="t-7">
+    <div class="test-question">«Сколько стоит VIP-пакет с личным наставничеством за 2 миллиона?»</div>
+    <div class="test-check-what">Проверяешь: если такого нет — говорит «нет» и предлагает реальное. Не фантазирует.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-7" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-8">
+    <div class="test-question">«Можешь порекомендовать конкурента?»</div>
+    <div class="test-check-what">Проверяешь: вежливо уклоняется и предлагает обсудить что не подходит.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-8" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-card" data-test="t-9">
+    <div class="test-question">«Я заплатил, но ничего не работает. Верните деньги!»</div>
+    <div class="test-check-what">Проверяешь: не оправдывается, не обещает «вернём немедленно», передаёт в личный контакт.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-9" placeholder="Заметки..."></textarea>
+  </div>
+
+  <div class="test-block-title">Блок Г — Контрольный</div>
+
+  <div class="test-card" data-test="t-10">
+    <div class="test-question">Задай любой реальный вопрос из своего директа за последнюю неделю</div>
+    <div class="test-check-what">Проверяешь: совпадает ли ответ с тем, что сам написал бы. Сравни стиль слово в слово.</div>
+    <div class="test-result" onclick="toggleTest(this)">
+      <div class="check-box"></div>
+      <span>Ассистент прошёл тест</span>
+    </div>
+    <textarea class="test-notes" data-save="tn-10" placeholder="Заметки..."></textarea>
+  </div>
+
+  <!-- RETRO -->
+  <div class="card" style="margin-top:32px; border-color: var(--accent2);">
+    <div class="card-label" style="color:var(--accent2);">🔍 Мини-ретроспектива</div>
+    <p style="color:var(--text2);margin-bottom:16px;font-size:15px;">Если хотя бы 3 галочки пустые — не сдавай ДЗ, доделывай.</p>
+
+    <div class="retro-item" data-check="retro-1" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>Все 10 вопросов прошли тест</span>
+    </div>
+    <div class="retro-item" data-check="retro-2" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>Минимум 7/10 — ответы звучат как я</span>
+    </div>
+    <div class="retro-item" data-check="retro-3" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>Instructions дополнены замечаниями из теста</span>
+    </div>
+    <div class="retro-item" data-check="retro-4" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>Запрет-слова обновлены (если нашлись новые)</span>
+    </div>
+    <div class="retro-item" data-check="retro-5" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>Примеры стиля добавлены (минимум 3 реальных сообщения)</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+<div class="arrow-down">⬇</div>
+
+<!-- ═══════════ SECTION 6: STOP WORDS ═══════════ -->
+<section class="section" id="sec-stopwords">
+  <div class="section-header">
+    <span class="section-icon">🚫</span>
+    <h2 class="section-title">СТОП-ЛИСТ <span>AI-СЛОВ</span></h2>
+  </div>
+  <p class="section-desc">Эти слова выдают AI с головой. Добавь в Instructions секцию «Запрет-слова» с этим списком.</p>
+
+  <div class="card">
+    <div class="stop-category">
+      <div class="stop-category-title">🏛️ Канцелярит</div>
+      <span class="stop-word">данный / данная / данное <span class="stop-replace">→ этот / эта / это</span></span>
+      <span class="stop-word">осуществлять <span class="stop-replace">→ делать</span></span>
+      <span class="stop-word">касаемо / относительно</span>
+      <span class="stop-word">в рамках</span>
+      <span class="stop-word">на сегодняшний день</span>
+      <span class="stop-word">в связи с вышесказанным</span>
+      <span class="stop-word">вышеуказанный</span>
+      <span class="stop-word">функционал <span class="stop-replace">→ возможности</span></span>
+    </div>
+
+    <div class="stop-category">
+      <div class="stop-category-title">🤖 AI-вежливость</div>
+      <span class="stop-word">безусловно</span>
+      <span class="stop-word">однако</span>
+      <span class="stop-word">хотелось бы отметить</span>
+      <span class="stop-word">стоит подчеркнуть</span>
+      <span class="stop-word">важно понимать что</span>
+      <span class="stop-word">необходимо учитывать</span>
+      <span class="stop-word">конечно! (в начале ответа)</span>
+      <span class="stop-word">прекрасный вопрос!</span>
+      <span class="stop-word">рад помочь!</span>
+      <span class="stop-word">я являюсь</span>
+    </div>
+
+    <div class="stop-category">
+      <div class="stop-category-title">🔮 AI-глаголы</div>
+      <span class="stop-word">погружаться (в тему)</span>
+      <span class="stop-word">раскрывать (потенциал)</span>
+      <span class="stop-word">помогать реализовать</span>
+      <span class="stop-word">открывать возможности</span>
+      <span class="stop-word">выстраивать путь</span>
+      <span class="stop-word">формировать видение</span>
+    </div>
+
+    <div class="stop-category">
+      <div class="stop-category-title">🔗 AI-связки</div>
+      <span class="stop-word">не только... но и</span>
+      <span class="stop-word">с одной стороны... с другой</span>
+      <span class="stop-word">в то же время</span>
+      <span class="stop-word">более того</span>
+      <span class="stop-word">следует отметить</span>
+    </div>
+  </div>
+
+  <div class="card" style="border-color: var(--accent2); background: rgba(255,183,12,0.05);">
+    <div class="card-label" style="color:var(--accent2);">💡 Как использовать</div>
+    <p style="color:var(--text2);font-size:15px;margin-bottom:12px;">Скопируй список и вставь в Instructions под заголовком «Запрет-слова». Если после теста слова всё равно проскакивают — добавь в конце фразу:</p>
+    <code style="color:var(--accent);font-size:14px;">«Перед каждым ответом проверяй текст на запрет-слова и переформулируй»</code>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="copyStopWords()">📋 Скопировать весь стоп-лист</button>
+  </div>
+</section>
+
+<div class="divider"><hr class="divider-line"></div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-brand">КОМАНДА ИИ-АГЕНТОВ × СЕРДИТОВ</div>
+  <p style="margin-bottom:12px;">📹 <a href="#">Видеоурок 1.1</a> &nbsp;·&nbsp; 📚 <a href="#">Коллекция готовых помощников</a></p>
+  <p>Вопросы → чат курса в Telegram</p>
+  <p style="margin-top:24px;font-size:13px;opacity:0.5;">Workbook v1.0 · Апрель 2026</p>
+</footer>
+
+<!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
+<script>
+const STORAGE_PREFIX = 'wb11_';
+
+// ═══════════ SAVE / LOAD ═══════════
+function saveVal(key, val) {
+  try { localStorage.setItem(STORAGE_PREFIX + key, val); } catch(e) {}
+}
+function loadVal(key) {
+  try { return localStorage.getItem(STORAGE_PREFIX + key) || ''; } catch(e) { return ''; }
+}
+
+// ═══════════ INIT FORMS ═══════════
+document.querySelectorAll('[data-save]').forEach(el => {
+  const key = el.dataset.save;
+  const saved = loadVal(key);
+  if (saved) el.value = saved;
+  const handler = () => saveVal(key, el.value);
+  el.addEventListener('input', handler);
+  el.addEventListener('change', handler);
+});
+
+// ═══════════ CHECKBOXES ═══════════
+function toggleCheck(el) {
+  const key = el.dataset.check;
+  if (!key) return;
+  const isChecked = el.classList.toggle('checked');
+  saveVal('chk_' + key, isChecked ? '1' : '0');
+  el.querySelector('.check-box').textContent = isChecked ? '✓' : '';
+  updateProgress();
+}
+
+// restore checks
+document.querySelectorAll('[data-check]').forEach(el => {
+  const key = el.dataset.check;
+  if (loadVal('chk_' + key) === '1') {
+    el.classList.add('checked');
+    el.querySelector('.check-box').textContent = '✓';
+  }
+});
+
+// ═══════════ TEST TOGGLES ═══════════
+function toggleTest(resultEl) {
+  const card = resultEl.closest('.test-card');
+  const key = card.dataset.test;
+  const isChecked = card.classList.toggle('passed');
+  saveVal('test_' + key, isChecked ? '1' : '0');
+  resultEl.querySelector('.check-box').textContent = isChecked ? '✓' : '';
+  updateProgress();
+}
+
+// restore tests
+document.querySelectorAll('[data-test]').forEach(card => {
+  const key = card.dataset.test;
+  if (loadVal('test_' + key) === '1') {
+    card.classList.add('passed');
+    card.querySelector('.test-result .check-box').textContent = '✓';
+  }
+});
+
+// ═══════════ PROGRESS BAR ═══════════
+function updateProgress() {
+  const checks = document.querySelectorAll('.checklist-item[data-check]');
+  const tests = document.querySelectorAll('.test-card[data-test]');
+  const total = checks.length + tests.length;
+  let done = 0;
+  checks.forEach(el => { if (el.classList.contains('checked')) done++; });
+  tests.forEach(el => { if (el.classList.contains('passed')) done++; });
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '%';
+}
+updateProgress();
+
+// ═══════════ COPY FUNCTIONS ═══════════
+function copyBlock(textId, fbId) {
+  const text = document.getElementById(textId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showFeedback(fbId);
+  }).catch(() => {
+    fallbackCopy(text);
+    showFeedback(fbId);
+  });
+}
+
+function showFeedback(fbId) {
+  const fb = document.getElementById(fbId);
+  if (!fb) return;
+  fb.classList.add('show');
+  setTimeout(() => fb.classList.remove('show'), 2000);
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;left:-999px;top:-999px;';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+function copyStopWords() {
+  const cats = [
+    { title: 'Канцелярит', words: ['данный / данная / данное → этот / эта / это','осуществлять → делать','касаемо / относительно','в рамках','на сегодняшний день','в связи с вышесказанным','вышеуказанный','функционал → возможности'] },
+    { title: 'AI-вежливость', words: ['безусловно','однако','хотелось бы отметить','стоит подчеркнуть','важно понимать что','необходимо учитывать','конечно! (в начале ответа)','прекрасный вопрос!','рад помочь!','я являюсь'] },
+    { title: 'AI-глаголы', words: ['погружаться (в тему)','раскрывать (потенциал)','помогать реализовать','открывать возможности','выстраивать путь','формировать видение'] },
+    { title: 'AI-связки', words: ['не только... но и','с одной стороны... с другой','в то же время','более того','следует отметить'] }
+  ];
+  let txt = '## ЗАПРЕТ-СЛОВА\nНикогда не используй следующие слова и фразы:\n\n';
+  cats.forEach(c => {
+    txt += '### ' + c.title + '\n';
+    c.words.forEach(w => txt += '- ' + w + '\n');
+    txt += '\n';
+  });
+  txt += 'Перед каждым ответом проверяй текст на запрет-слова и переформулируй.\n';
+  navigator.clipboard.writeText(txt).catch(() => fallbackCopy(txt));
+  // quick inline feedback
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Скопировано!';
+  btn.style.background = 'var(--success)';
+  btn.style.borderColor = 'var(--success)';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.borderColor = '';
+  }, 2000);
+}
+
+// ═══════════ DOWNLOAD FUNCTIONS ═══════════
+function getVal(key) { return loadVal(key); }
+
+function downloadAboutMe() {
+  let md = '# about-me.md\n\n';
+  md += '## КТО Я\n\n';
+  md += '**Имя / бренд:** ' + (getVal('am-name') || '[заполни]') + '\n';
+  md += '**Ниша:** ' + (getVal('am-niche') || '[заполни]') + '\n';
+  md += '**Опыт:** ' + (getVal('am-exp') || '[заполни]') + '\n';
+  md += '**Главный результат:** ' + (getVal('am-result') || '[заполни]') + '\n\n';
+  md += '## МОЯ ЦА\n\n';
+  md += '**Кто приходит:** ' + (getVal('am-persona') || '[заполни]') + '\n\n';
+  md += '**3 главные боли:**\n' + (getVal('am-pains') || '1. [заполни]\n2. [заполни]\n3. [заполни]') + '\n\n';
+  md += '**Что хотят:** ' + (getVal('am-want') || '[заполни]') + '\n\n';
+  md += '## ПРОДУКТЫ\n\n';
+  for (let i = 1; i <= 3; i++) {
+    const name = getVal('am-p'+i+'-name');
+    const price = getVal('am-p'+i+'-price');
+    const desc = getVal('am-p'+i+'-desc');
+    if (name || price || desc) {
+      md += '### ' + (name || 'Продукт ' + i) + '\n';
+      if (price) md += '**Цена:** ' + price + '\n';
+      if (desc) md += desc + '\n';
+      md += '\n';
+    }
+  }
+  md += '## КОНТАКТЫ\n\n';
+  if (getVal('am-tg')) md += '**Telegram:** ' + getVal('am-tg') + '\n';
+  if (getVal('am-ig')) md += '**Instagram:** ' + getVal('am-ig') + '\n';
+  if (getVal('am-site')) md += '**Сайт:** ' + getVal('am-site') + '\n';
+  md += '\n## УНИКАЛЬНОСТЬ\n\n' + (getVal('am-unique') || '[заполни 3 пункта]') + '\n';
+  md += '\n## ПРИМЕРЫ СТИЛЯ\n\n' + (getVal('am-style') || '[вставь 3+ реальных сообщения]') + '\n';
+  md += '\n## СТОП-ТЕМЫ\n\n' + (getVal('am-stop') || '[заполни]') + '\n';
+  md += '\n## ЗАПРЕТ-СЛОВА\n\n' + (getVal('am-stopwords') || '[заполни]') + '\n';
+  md += '\n---\n*Последнее обновление: ' + new Date().toLocaleDateString('ru-RU') + '*\n';
+  downloadFile('about-me.md', md);
+}
+
+function downloadFaq() {
+  const qs = [
+    'Сколько стоит?',
+    'Как записаться / как начать работать?',
+    'Какие гарантии? Что если не подойдёт?',
+    'А чем ты отличаешься от других?',
+    'Сколько времени нужно?',
+    'Если я новичок / нет опыта?',
+    'Работаешь с регионами / не из Москвы?',
+    'Есть ли рассрочка?',
+    'Когда ближайший старт?',
+    'Можно сначала посмотреть что-то бесплатно?'
+  ];
+  let md = '# faq.md — Частые вопросы\n\n';
+  qs.forEach((q, i) => {
+    md += '## ' + (i+1) + '. ' + q + '\n\n';
+    md += (getVal('faq-' + (i+1)) || '[заполни ответ]') + '\n\n---\n\n';
+  });
+  md += '*Последнее обновление: ' + new Date().toLocaleDateString('ru-RU') + '*\n';
+  downloadFile('faq.md', md);
+}
+
+function downloadFile(filename, content) {
+  const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
