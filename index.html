@@ -232,32 +232,12 @@
     .btn-file:hover {
       background: #254a3a;
     }
-    .expand-toggle {
-      display: none;
+    .btn-zip {
+      background: #2a2a1e;
+      color: var(--orange);
     }
-    .expandable {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-    .expand-toggle:checked + .card .expandable,
-    .expand-toggle:checked ~ .expandable {
-      max-height: 2000px;
-    }
-    .expand-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--accent2);
-      font-size: 0.85rem;
-      cursor: pointer;
-      margin-top: 8px;
-      user-select: none;
-    }
-    .expand-btn::after {
-      content: '▼';
-      font-size: 0.6rem;
-      transition: transform 0.3s;
+    .btn-zip:hover {
+      background: #3a3a2a;
     }
     .footer {
       text-align: center;
@@ -265,18 +245,6 @@
       color: var(--muted);
       font-size: 0.8rem;
       border-top: 1px solid var(--border);
-    }
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 10px 0 0;
-    }
-    @media (max-width: 600px) {
-      .header h1 { font-size: 1.5rem; }
-      .card { padding: 20px; }
-      .card-title { font-size: 1.1rem; }
-      .nav { gap: 5px; padding: 12px; }
-      .nav-btn { font-size: 0.75rem; padding: 5px 12px; }
     }
     details summary {
       cursor: pointer;
@@ -297,6 +265,13 @@
     .card-body ol li {
       padding: 3px 0;
     }
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.5rem; }
+      .card { padding: 20px; }
+      .card-title { font-size: 1.1rem; }
+      .nav { gap: 5px; padding: 12px; }
+      .nav-btn { font-size: 0.75rem; padding: 5px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -307,11 +282,12 @@
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="filterCards('all')">Все</button>
-  <button class="nav-btn" onclick="filterCards('lesson')">Уроки</button>
-  <button class="nav-btn" onclick="filterCards('workbook')">Воркбуки</button>
-  <button class="nav-btn" onclick="filterCards('guide')">Гайды</button>
-  <button class="nav-btn" onclick="filterCards('vip')">VIP</button>
+  <button class="nav-btn active" onclick="filterCards('all', this)">Все</button>
+  <button class="nav-btn" onclick="filterCards('lesson', this)">Уроки</button>
+  <button class="nav-btn" onclick="filterCards('workbook', this)">Воркбуки</button>
+  <button class="nav-btn" onclick="filterCards('guide', this)">Гайды</button>
+  <button class="nav-btn" onclick="filterCards('vip', this)">VIP</button>
+  <button class="nav-btn" onclick="filterCards('live', this)">Эфиры</button>
 </nav>
 
 <div class="container">
@@ -325,9 +301,7 @@
       <div class="card-icon">🎓</div>
       <div>
         <div class="card-title">Урок 1.1 — Claude за 15 минут</div>
-        <div class="card-tags">
-          <span class="tag lesson">Урок</span>
-        </div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -355,9 +329,7 @@
       <div class="card-icon">📝</div>
       <div>
         <div class="card-title">Воркбук урока 1.1</div>
-        <div class="card-tags">
-          <span class="tag workbook">Воркбук</span>
-        </div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -389,9 +361,7 @@
       <div class="card-icon">🤖</div>
       <div>
         <div class="card-title">Claude из России — полный гайд 2026</div>
-        <div class="card-tags">
-          <span class="tag guide">Гайд</span>
-        </div>
+        <div class="card-tags"><span class="tag guide">Гайд</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -423,9 +393,7 @@
       <div class="card-icon">📂</div>
       <div>
         <div class="card-title">Claude Projects — рабочий playbook</div>
-        <div class="card-tags">
-          <span class="tag guide">Гайд</span>
-        </div>
+        <div class="card-tags"><span class="tag guide">Гайд</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -449,15 +417,43 @@
     </div>
   </div>
 
+  <!-- Claude Cowork -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">⚙️</div>
+      <div>
+        <div class="card-title">Claude Cowork — рабочий playbook</div>
+        <div class="card-tags"><span class="tag guide">Гайд</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Playbook для тех, кто хочет использовать Claude не как чатик, а как реального цифрового исполнителя под задачу.</p>
+      <details>
+        <summary>Что внутри</summary>
+        <div>
+          <ul>
+            <li>Как правильно ставить задачу в Cowork</li>
+            <li>Где смотреть progress и как не мешать лишний раз</li>
+            <li>Как работать с approvals, чтобы не отдать лишний доступ</li>
+            <li>Как использовать projects под длинные рабочие процессы</li>
+            <li>Когда включать computer use, а когда не надо</li>
+          </ul>
+          <p style="margin-top:10px"><em>Публичные скрины, стрелки, пояснения, прикладные сценарии — без воды.</em></p>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/claude-cowork-serdito-playbook.html" target="_blank" class="btn btn-file">📄 Открыть playbook</a>
+    </div>
+  </div>
+
   <!-- Урок 1.2 -->
   <div class="card" data-type="lesson">
     <div class="card-header">
       <div class="card-icon">🎓</div>
       <div>
         <div class="card-title">Урок 1.2 — Первый AI-ассистент в Telegram</div>
-        <div class="card-tags">
-          <span class="tag lesson">Урок</span>
-        </div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -489,9 +485,7 @@
       <div class="card-icon">📝</div>
       <div>
         <div class="card-title">Воркбук по OpenClaw</div>
-        <div class="card-tags">
-          <span class="tag workbook">Воркбук</span>
-        </div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -508,8 +502,8 @@
     </div>
   </div>
 
-  <!-- Запись эфира -->
-  <div class="card" data-type="lesson">
+  <!-- Запись эфира 1 -->
+  <div class="card" data-type="live">
     <div class="card-header">
       <div class="card-icon">🔴</div>
       <div>
@@ -521,7 +515,7 @@
       </div>
     </div>
     <div class="card-body">
-      <p>Помогает дожать до результата, если ты где-то встрял по дороге.</p>
+      <p>Помогает дожать до результата, если ты где-то встрял по дороге. Плюс файлы проекта для твоего OpenClaw воркспейса (создали на эфире).</p>
       <details>
         <summary>Что внутри воркбука</summary>
         <div>
@@ -539,6 +533,7 @@
     <div class="card-actions">
       <a href="https://kinescope.io/dANfEDL995RBnMzcdcPX98/plD96g2q" target="_blank" class="btn btn-primary">▶ Смотреть запись</a>
       <a href="files/efir-2026-04-16-workbook.html" target="_blank" class="btn btn-file">📄 Воркбук эфира</a>
+      <a href="files/ORTEMIY 2.zip" download class="btn btn-zip">📦 Файлы проекта</a>
     </div>
   </div>
 
@@ -548,9 +543,7 @@
       <div class="card-icon">🎨</div>
       <div>
         <div class="card-title">Claude Design — Воркбук</div>
-        <div class="card-tags">
-          <span class="tag workbook">Воркбук</span>
-        </div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -573,9 +566,7 @@
       <div class="card-icon">⚡</div>
       <div>
         <div class="card-title">Экстренный урок — как задавать вопросы</div>
-        <div class="card-tags">
-          <span class="tag lesson">Урок</span>
-        </div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -607,9 +598,7 @@
       <div class="card-icon">🎓</div>
       <div>
         <div class="card-title">Урок 2.1 — Первая AI-команда</div>
-        <div class="card-tags">
-          <span class="tag lesson">Урок</span>
-        </div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -650,9 +639,7 @@
       <div class="card-icon">📝</div>
       <div>
         <div class="card-title">Workbook к уроку 2.1</div>
-        <div class="card-tags">
-          <span class="tag workbook">Воркбук</span>
-        </div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -676,9 +663,7 @@
       <div class="card-icon">👑</div>
       <div>
         <div class="card-title">VIP — 5 AI-сотрудников в Telegram</div>
-        <div class="card-tags">
-          <span class="tag vip">VIP</span>
-        </div>
+        <div class="card-tags"><span class="tag vip">VIP</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -710,21 +695,17 @@
           <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh)</div>
           <p><strong>Шаг 3.</strong> Выберите <strong>2) VIP — 5 агентов</strong></p>
           <p><strong>Шаг 4.</strong> Проверьте — напишите любому боту в Telegram.</p>
-
           <p style="margin-top:12px"><strong>🆘 Если что-то не получилось:</strong></p>
           <ul>
             <li><strong>Токен не прошёл</strong> → скопируйте заново из @AITeamVIPBot</li>
             <li><strong>Бот не нашёл вас</strong> → проверьте email/телефон, подождите 30 мин</li>
             <li><strong>OpenClaw не найден</strong> → сначала установите из 1 недели</li>
-            <li><strong>Ничего не помогло</strong> → соберите debug-архив:</li>
+            <li><strong>Ничего не помогло</strong> → соберите debug-архив и отправьте в поддержку</li>
           </ul>
-          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/.../install-agents.sh) --collect-debug</div>
-
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh) --collect-debug</div>
           <div class="note">Уже стоят 3 агента со Стандарта? Запусти установщик снова → выбери VIP → «Дополнить». Старые агенты останутся с памятью, добавятся Дизайнер и Координатор.</div>
         </div>
       </details>
-    </div>
-    <div class="card-actions">
     </div>
   </div>
 
@@ -734,9 +715,7 @@
       <div class="card-icon">📘</div>
       <div>
         <div class="card-title">Воркбук по установке AI-команды</div>
-        <div class="card-tags">
-          <span class="tag workbook">Воркбук</span>
-        </div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
@@ -761,15 +740,14 @@
       <div class="card-icon">🎓</div>
       <div>
         <div class="card-title">Урок 2.2 — Роли и первый рабочий цикл</div>
-        <div class="card-tags">
-          <span class="tag lesson">Урок</span>
-        </div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
       </div>
     </div>
     <div class="card-body">
       <p>Не просто смотрите на команду агентов, а начинаете через неё работать.</p>
       <ul>
         <li>Кто за что отвечает: технарь, маркетолог, продюсер</li>
+        <li>Как не писать одну и ту же задачу всем подряд</li>
         <li>Как выбрать главного агента под задачу</li>
         <li>Как передавать результат от роли к роли</li>
         <li>Как проходить частые затыки</li>
@@ -781,24 +759,302 @@
     </div>
   </div>
 
-  <!-- Дополнительные материалы -->
-  <div class="week-label">Дополнительные материалы</div>
-
-  <div class="card" data-type="guide">
+  <!-- Workbook Codex + ChatGPT 5.4 -->
+  <div class="card" data-type="workbook">
     <div class="card-header">
-      <div class="card-icon">🔧</div>
+      <div class="card-icon">💻</div>
       <div>
-        <div class="card-title">Claude Cowork — Playbook</div>
-        <div class="card-tags">
-          <span class="tag guide">Гайд</span>
-        </div>
+        <div class="card-title">Workbook — Codex + ChatGPT 5.4</div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
       </div>
     </div>
     <div class="card-body">
-      <p>Рабочий playbook по Claude Cowork — для работы с кодом и автономных задач.</p>
+      <p>Пошаговый практический материал: подключаешь Codex через ChatGPT, проходишь авторизацию и выставляешь рабочую модель <code>openai-codex/gpt-5.4</code> в OpenClaw.</p>
+      <ul>
+        <li>Как устроена связка</li>
+        <li>Пошаговое подключение без лишней технички</li>
+        <li>Готовые команды, которые можно копировать</li>
+        <li>Чек-лист проверки и быстрый тест на работоспособность</li>
+        <li>Разбор частых ошибок</li>
+      </ul>
     </div>
     <div class="card-actions">
-      <a href="files/claude-cowork-serdito-playbook.html" target="_blank" class="btn btn-file">📄 Открыть playbook</a>
+      <a href="files/serditov-codex-chatgpt-5-4-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Обновление AI-команды 5.5 -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">🔄</div>
+      <div>
+        <div class="card-title">Обновление AI-команды — что нового в 5.5</div>
+        <div class="card-tags"><span class="tag guide">Гайд</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>За последнее время накатили 5 сильных апдейтов. Если давно не запускал установщик — самое время обновиться.</p>
+      <details>
+        <summary>Что нового</summary>
+        <div>
+          <ul>
+            <li><strong>VIP-агенты с характером</strong> — Дизайнер, Координатор и Копирайтер получили личность, границы, skills и онбординг под нишу</li>
+            <li><strong>Обновление без потери памяти</strong> — обновляешь шаблоны и skills, не трогая MEMORY.md</li>
+            <li><strong>Умная память через embeddings</strong> — агент ищет по смыслу, работает быстрее и дешевле</li>
+            <li><strong>Командная работа в Telegram-группе</strong> — агенты делегируют задачи друг другу</li>
+            <li><strong>Стабильный новый установщик</strong> — меньше зависаний, нормальные сообщения об ошибках</li>
+          </ul>
+          <p style="margin-top:12px"><strong>Если уже установлено — просто обновись:</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh) --refresh-templates</div>
+          <p><strong>Новый стабильный установщик (рекомендуется):</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://github.com/tonytrue92-beep/openclaw-agents-pack/releases/latest/download/install-agents-bundled.sh)</div>
+          <p><strong>Включить group mode:</strong></p>
+          <div class="cmd-block">bash &lt;(curl -fsSL https://raw.githubusercontent.com/tonytrue92-beep/openclaw-agents-pack/main/scripts/install-agents.sh) --enable-group-mode &lt;chat_id&gt;</div>
+          <div class="note">Карта РФ в OpenAI не проходит. Для умной памяти через embeddings нужен OpenAI API key — шаг можно пропустить.</div>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/openclaw-5.5-upgrade-fix.md" target="_blank" class="btn btn-file">📄 Гайд по фиксу 5.5</a>
+    </div>
+  </div>
+
+  <!-- Windows Install Guide -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">🪟</div>
+      <div>
+        <div class="card-title">Установка на Windows — пошаговый гайд</div>
+        <div class="card-tags"><span class="tag guide">Гайд</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Отдельная пошаговая инструкция по установке OpenClaw и AI-команды на Windows — без боли, без технарской каши.</p>
+    </div>
+    <div class="card-actions">
+      <a href="files/serditov-windows-install-guide.html" target="_blank" class="btn btn-file">📄 Открыть гайд</a>
+    </div>
+  </div>
+
+  <!-- Запись второго эфира (Q&A) -->
+  <div class="card" data-type="live">
+    <div class="card-header">
+      <div class="card-icon">🔴</div>
+      <div>
+        <div class="card-title">Запись Q&A эфира по второму блоку</div>
+        <div class="card-tags"><span class="tag live">Эфир</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Разобрали все вопросы, которые вы накидали в чат заранее.</p>
+      <ul>
+        <li>Как собрать AI-команду, чтобы агенты нормально работали вместе</li>
+        <li>Как разделять проекты и память, чтобы не было каши</li>
+        <li>Как переносить команду с мака на VPS</li>
+        <li>Как безопасно давать агентам доступы</li>
+        <li>Техзатыки по настройке, моделям и архитектуре команды</li>
+      </ul>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/3Pjy7sLe1SF23T2B6PcXac/pl7s3Oh6" target="_blank" class="btn btn-primary">▶ Смотреть запись</a>
+    </div>
+  </div>
+
+  <!-- VIP Designer Skills Box -->
+  <div class="card" data-type="vip">
+    <div class="card-header">
+      <div class="card-icon">🎁</div>
+      <div>
+        <div class="card-title">VIP — Designer Skills Box</div>
+        <div class="card-tags"><span class="tag vip">VIP</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Скиллы для прокачки вашего дизайнера на стероидах. Скормите технарю всё из архива и скажите, чтобы установил дизайнеру — он сделает это автоматически.</p>
+    </div>
+    <div class="card-actions">
+      <a href="files/designer-skills-client-box-2026-04-26.zip" download class="btn btn-zip">📦 Скачать архив</a>
+    </div>
+  </div>
+
+  <!-- ==================== НЕДЕЛЯ 3 ==================== -->
+  <div class="week-label">Неделя 3</div>
+
+  <!-- Урок 3.1 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 3.1 — Командный центр AI-команды</div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Переходим от «у меня есть боты в Telegram» к нормальной работе через AI-команду с командным центром.</p>
+      <details>
+        <summary>Что внутри и домашка</summary>
+        <div>
+          <ul>
+            <li>Как ставить задачи агентам</li>
+            <li>Как выбирать нужную роль под задачу</li>
+            <li>Как прогонять одну задачу через 2 агентов</li>
+            <li>Как фиксировать результат, чтобы он не потерялся</li>
+            <li>Как вести задачи через Notion-шаблон</li>
+          </ul>
+          <p style="margin-top:12px"><strong>Что нужно сделать после урока:</strong></p>
+          <ol>
+            <li>Открыть шаблон командного центра и продублировать его себе</li>
+            <li>Завести 3 реальные задачи</li>
+            <li>Одну задачу прогнать минимум через 2 агентов</li>
+            <li>Зафиксировать финальный результат</li>
+            <li>Скинуть в чат скрин или ссылку</li>
+          </ol>
+          <div class="note">Сдаём не факт просмотра, а результат: задача → агент 1 → агент 2 → финальный артефакт.</div>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/wMLyEJ81S6dg1i8Jb9C9Fa/plJPhRKK" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+      <a href="https://curious-shock-9ff.notion.site/AI-351ca3353d4781af88e2c5d53252d801?source=copy_link" target="_blank" class="btn btn-secondary">📋 Шаблон Notion</a>
+    </div>
+  </div>
+
+  <!-- Воркбук 3.1 -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Workbook к уроку 3.1 — Командный центр</div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Нужен, чтобы вы не просто посмотрели урок, а собрали у себя рабочую систему управления агентами.</p>
+      <ul>
+        <li>Зачем AI-команде нужен командный центр</li>
+        <li>Как понять, какому агенту ставить задачу</li>
+        <li>Как формулировать задачу по нормальной формуле</li>
+        <li>Как прогнать одну задачу через 2 агентов</li>
+        <li>Как зафиксировать результат в архиве</li>
+      </ul>
+    </div>
+    <div class="card-actions">
+      <a href="files/lesson-3-1-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- Урок 3.2 -->
+  <div class="card" data-type="lesson">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Урок 3.2 — Кастомные агенты и скиллы</div>
+        <div class="card-tags"><span class="tag lesson">Урок</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Финальный урок курса. Собираешь свою AI-команду под себя: под свои задачи, свою нишу, свой стиль работы и повторяющиеся процессы.</p>
+      <details>
+        <summary>Что внутри и домашка</summary>
+        <div>
+          <ul>
+            <li>Что такое кастомный агент простым языком</li>
+            <li>Из каких 5 элементов он состоит</li>
+            <li>Чем агент отличается от skill</li>
+            <li>Как прописать роль, контекст, правила и результат</li>
+            <li>Как добавить агенту отдельный skill</li>
+            <li>Как проверить агента на реальной задаче</li>
+          </ul>
+          <p style="margin-top:12px"><strong>Что нужно сделать после урока:</strong></p>
+          <ol>
+            <li>Выбрать одну роль, которая тебе реально нужна сейчас</li>
+            <li>Собрать одного кастомного агента</li>
+            <li>Прописать контекст, задачи, правила и критерий результата</li>
+            <li>Добавить один skill / инструкцию</li>
+            <li>Проверить агента на реальной задаче</li>
+            <li>Сдать результат в чат</li>
+          </ol>
+          <div class="note">Сдаём выпускной комплект: название агента → задача / ниша → 3 задачи → skill → результат работы.</div>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="https://kinescope.io/94r3wqVHrYdRgHpQWmEN5S/plFO9MMQ" target="_blank" class="btn btn-primary">▶ Смотреть урок</a>
+    </div>
+  </div>
+
+  <!-- Воркбук 3.2 -->
+  <div class="card" data-type="workbook">
+    <div class="card-header">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Workbook к уроку 3.2 — Финальная сборка</div>
+        <div class="card-tags"><span class="tag workbook">Воркбук</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Финальный воркбук курса. Не просто файл к уроку — ваша выпускная сборка.</p>
+      <ul>
+        <li>Что такое кастомный агент и чем он отличается от обычного бота</li>
+        <li>Из каких блоков собирается агент</li>
+        <li>Что такое SOUL и зачем он нужен</li>
+        <li>Что такое skill и чем он отличается от агента</li>
+        <li>Какие ошибки чаще всего ломают финальную сборку</li>
+      </ul>
+      <div class="note" style="margin-top:10px">Агент — это <em>кто</em> делает. Skill — это <em>как именно</em> он делает конкретную задачу.</div>
+    </div>
+    <div class="card-actions">
+      <a href="files/lesson-3-2-workbook.html" target="_blank" class="btn btn-file">📄 Открыть воркбук</a>
+    </div>
+  </div>
+
+  <!-- ==================== ДОПОЛНИТЕЛЬНЫЕ ==================== -->
+  <div class="week-label">Дополнительные материалы</div>
+
+  <!-- Статья для своих -->
+  <div class="card" data-type="guide">
+    <div class="card-header">
+      <div class="card-icon">📰</div>
+      <div>
+        <div class="card-title">Статья — Нахуя бизнесу ещё один курс по ИИ</div>
+        <div class="card-tags"><span class="tag guide">Статья</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Большая статья для своих — без корпоративного шампуня и сказок про ИИ.</p>
+      <details>
+        <summary>Что внутри</summary>
+        <div>
+          <ul>
+            <li>Чем ИИ Team 2.0 отличается от первого потока</li>
+            <li>Зачем Смит поверх OpenClaw</li>
+            <li>Почему нейрокуратор 24/7 — это не бонусик, а спасательный круг</li>
+            <li>Как применять в сервисах, клиниках, beauty и обычном бизнесе</li>
+            <li>Как считать окупаемость</li>
+            <li>Чем отличаются Base, Pro и личная работа</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+    <div class="card-actions">
+      <a href="files/СТАТЬЯ ДЛЯ СВОИХ.html" target="_blank" class="btn btn-file">📄 Читать статью</a>
+    </div>
+  </div>
+
+  <!-- Запись выпускного эфира -->
+  <div class="card" data-type="live">
+    <div class="card-header">
+      <div class="card-icon">🎓</div>
+      <div>
+        <div class="card-title">Запись выпускного эфира — 15 мая</div>
+        <div class="card-tags"><span class="tag live">Эфир</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Финальный эфир курса. Подвели итоги, разобрали вопросы, отметили выпускников.</p>
+    </div>
+    <div class="card-actions">
+      <a href="https://drive.google.com/file/d/11CCQNxPGdwK6inA2Ac9cD73PcN1z6o0l/view?usp=sharing" target="_blank" class="btn btn-primary">▶ Смотреть запись</a>
     </div>
   </div>
 
@@ -809,9 +1065,9 @@
 </div>
 
 <script>
-function filterCards(type) {
+function filterCards(type, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   document.querySelectorAll('.card').forEach(card => {
     if (type === 'all') {
       card.style.display = '';
